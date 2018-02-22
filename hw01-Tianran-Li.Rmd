@@ -1,0 +1,50 @@
+---
+title: "hw01-Tianran-Li"
+author: "Grace Li (Tianran)"
+date: "February 20, 2018"
+output: github_document
+---
+
+```{r}
+read.csv('imports-85.data')
+```
+
+
+```{r}
+column_names <- c('symboling', 'normalized_losses', 'make', 'fuel_type', 'aspiration', 'num_of_doors', 'body_style','drive_wheels', 'engine_location', 'wheel_base', 'length', 'width', 'height', 'curb_weight', 'engine_type', 'num_of_cylinders', 'engine_size', 'fuel_system', 'bore', 'stroke', 'compression_ratio', 'horsepower', 'peak_rpm', 'city_mpg', 'highway_mpg', 'price' )
+column_names
+column_types <- c('double', 'double', 'character', 'character', 'character', 'character', 'character', 'character', 'character', 'double', 'double', 'double', 'double', 'integer', 'character', 'character', 'integer', 'character', 'double', 'double', 'double','integer','integer','integer','integer','integer' )
+```
+
+
+```{r}
+normal_read <- read.csv(
+    'imports-85.data',
+    col.names = column_names,
+    colClasses = column_types,
+    sep = ",",
+    na.strings = '?'
+)
+
+str(normal_read)
+normal_read
+```
+
+```{r}
+library('readr')
+readr_read <- read_csv('imports-85.data' , col_names = column_names, col_types = cols('d', 'd', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'd', 'd', 'd', 'd', 'i', 'c', 'c', 'i', 'c', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i'))
+str(readr_read)
+readr_read
+```
+
+
+
+##Technical Questions
+```{r}
+read.csv('imports-85.data', header = FALSE)
+```
+a. The first row of the data file becomes the column names.
+b. The function puts V1- V26 as the column names.
+
+
+
