@@ -40,11 +40,31 @@ readr_read
 
 
 ##Technical Questions
-```{r}
-read.csv('imports-85.data', header = FALSE)
-```
-a. The first row of the data file becomes the column names.
+
+a. The first row of the data file becomes the column names if you don't provide a vector of column names.
 b. The function puts V1- V26 as the column names.
+c. The data type of those columns that contain '?' gets converted to factors if you don't specify how missing values are codified. 
+d. The data frame imported in the second option is bigger since each column's data type is specified, so the converted types will occupy more space than the default data type.
+e. The data type of every entry in dat will be converted to charactor. The matrix will consist of 26 charactor vectors, with 205 entries each, but the matrix will only show the first 38 entries (or to its max).
 
 
+##Practice base plotting
+
+```{r}
+hist(normal_read[ ,'price'], col = 'purple')
+boxplot(normal_read[ ,'horsepower'], horizontal =  TRUE)
+counted_table = count(normal_read, body_style)
+sorted_table = counted_table[order(counted_table$n, decreasing = TRUE), ]
+barplot(sorted_table$n, names.arg = sorted_table$body_style)
+stars(normal_read[normal_read$aspiration == 'turbo' , c("wheel_base", "length", "width", "height", "price")])
+```
+
+##Summaries
+
+```{r}
+gas_cars <- normal_read[normal_read$fuel_type == 'gas', ]
+mean(gas_cars$price, na.rm = TRUE)
+diesel_cars <- normal_read[normal_read$fuel_type == 'diesel', ]
+mean(diesel_cars$price, na.rm = TRUE)
+```
 
