@@ -51,11 +51,12 @@ e. The data type of every entry in dat will be converted to charactor. The matri
 ##Practice base plotting
 
 ```{r}
+library(plyr)
 hist(normal_read[ ,'price'], col = 'purple')
 boxplot(normal_read[ ,'horsepower'], horizontal =  TRUE)
-counted_table = count(normal_read, body_style)
-sorted_table = counted_table[order(counted_table$n, decreasing = TRUE), ]
-barplot(sorted_table$n, names.arg = sorted_table$body_style)
+counted_table = count(normal_read, 'body_style')
+sorted_table = counted_table[order(counted_table$freq, decreasing = TRUE), ]
+barplot(sorted_table$freq, names.arg = sorted_table$body_style)
 stars(normal_read[normal_read$aspiration == 'turbo' , c("wheel_base", "length", "width", "height", "price")])
 ```
 
@@ -64,7 +65,40 @@ stars(normal_read[normal_read$aspiration == 'turbo' , c("wheel_base", "length", 
 ```{r}
 gas_cars <- normal_read[normal_read$fuel_type == 'gas', ]
 mean(gas_cars$price, na.rm = TRUE)
+```
+
+```{r}
 diesel_cars <- normal_read[normal_read$fuel_type == 'diesel', ]
 mean(diesel_cars$price, na.rm = TRUE)
+```
+
+```{r}
+normal_read[normal_read$num_of_cylinders == 'twelve', 'make']
+```
+
+```{r}
+counted_diesel = count(diesel_cars, 'make')
+counted_diesel[which.max(counted_diesel$freq), "make"]
+```
+
+```{r}
+normal_read[which.max(normal_read$horsepower), "price"]
+```
+
+```{r}
+city_bottom_ten = tail((normal_read[order(normal_read$city_mpg, decreasing = TRUE), ]), n = nrow(normal_read)/10 )
+city_bottom_ten[ ,'city_mpg']
+highway_top_ten =  head((normal_read[order(normal_read$highway_mpg, decreasing = TRUE), ]), n = nrow(normal_read)/10 )
+highway_top_ten[ ,'highway_mpg' ]
+```
+
+```{r}
+median(city_bottom_ten$price, na.rm = TRUE)
+```
+
+```{r}
+
+mtcars[[1]]
+
 ```
 
