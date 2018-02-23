@@ -102,12 +102,10 @@ median(city_bottom_ten$price, na.rm = TRUE)
 a. attempting to use the name of a column that does not exist will return a NULL
 b. mtcars[ ,mpg] fails to return the vector mpg
 c. The command fails because there is no object named mpg in environment. mpg is the name of the column on the data frame, but mpg is not assigned to any particular object.
-d. YES can include an R list as a 'column' of a data frame
-```{r}
+d. YES, you can include an R list as a 'column' of a data frame. A data frame is a list, it can contain other lists.
+e. The command returns the list of vectors that make up the data frame. 
+f. data.frame can be used to conver abc into a data frame.
 
-mtcars[ ,mpg]
-
-```
 
 
 ##Correlations
@@ -122,8 +120,41 @@ library(corrplot)
 corrplot(correlation_matrix, method = 'circle')
 corrplot(correlation_matrix, method = 'ellipse')
 ```
+The strongest positive correlation is between an object and itself. 
+The strongest negative correlatio is between city_mpg or highway_mpg and horsepower.
+In some combinations, the correlation between the two vectors is close to zero.
 
+
+
+Principal Component Analysis
+
+8.1) 
+```{r}
+Qdat_PCA = prcomp(qdat, scale = TRUE)
+names(Qdat_PCA)
+eigenvalues = Qdat_PCA$sdev^2
+percentages = eigenvalues*100/sum(eigenvalues)
+cum_percentages = cumsum(percentages)
+data.frame(eigenvalues, percentages, cum_percentages)
+Qdat_PCA$x
+```
+
+About 79.60% of variation is "captured" by the first three components.
+
+8.2)
 
 ```{r}
-prcomp(qdat)
+df_PCA = data.frame(Qdat_PCA$rotation)
+plot(df_PCA$PC1, df_PCA$PC2, type = 'p')
+plot(Qdat_PCA, type = 'l')
 ```
+
+```{r}
+Print_PCA = princomp(qdat, cor = TRUE)
+Loadingdf = data.frame(unclass(Print_PCA$loadings))
+plot(Loadingdf$Comp.1, Loadingdf$Comp.2, type = 'p')
+plot(Print_PCA, type = 'l')
+```
+For both prcomp and princomp, the first loading has the most variance, and can represent more of the data than any other object in loading.
+For Princomp, the loadings are perpendicular to each other.
+
