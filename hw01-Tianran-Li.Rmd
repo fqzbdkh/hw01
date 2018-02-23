@@ -96,9 +96,34 @@ highway_top_ten[ ,'highway_mpg' ]
 median(city_bottom_ten$price, na.rm = TRUE)
 ```
 
+
+##Technical Questions about data frames
+
+a. attempting to use the name of a column that does not exist will return a NULL
+b. mtcars[ ,mpg] fails to return the vector mpg
+c. The command fails because there is no object named mpg in environment. mpg is the name of the column on the data frame, but mpg is not assigned to any particular object.
+d. YES can include an R list as a 'column' of a data frame
 ```{r}
 
-mtcars[[1]]
+mtcars[ ,mpg]
 
 ```
 
+
+##Correlations
+
+```{r}
+read = na.omit(normal_read)
+
+quantitative = Filter(is.numeric, read)
+qdat = quantitative[ ,3:ncol(quantitative)]
+correlation_matrix = cor(qdat)
+library(corrplot)
+corrplot(correlation_matrix, method = 'circle')
+corrplot(correlation_matrix, method = 'ellipse')
+```
+
+
+```{r}
+prcomp(qdat)
+```
