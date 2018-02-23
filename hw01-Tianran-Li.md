@@ -1900,3 +1900,143 @@ mean(diesel_cars$price, na.rm = TRUE)
 ```
 
     ## [1] 15838.15
+
+``` r
+normal_read[normal_read$num_of_cylinders == 'twelve', 'make']
+```
+
+    ## [1] "jaguar"
+
+``` r
+counted_diesel = count(diesel_cars, 'make')
+counted_diesel[which.max(counted_diesel$freq), "make"]
+```
+
+    ## [1] "peugot"
+
+``` r
+normal_read[which.max(normal_read$horsepower), "price"]
+```
+
+    ## [1] NA
+
+``` r
+city_bottom_ten = tail((normal_read[order(normal_read$city_mpg, decreasing = TRUE), ]), n = nrow(normal_read)/10 )
+city_bottom_ten[ ,'city_mpg']
+```
+
+    ##  [1] 17 17 17 17 17 17 17 17 17 16 16 16 16 16 16 15 15 15 14 14 13
+
+``` r
+highway_top_ten =  head((normal_read[order(normal_read$highway_mpg, decreasing = TRUE), ]), n = nrow(normal_read)/10 )
+highway_top_ten[ ,'highway_mpg' ]
+```
+
+    ##  [1] 54 53 50 47 47 46 46 43 43 43 43 42 42 42 41 41 41 39 39 38
+
+``` r
+median(city_bottom_ten$price, na.rm = TRUE)
+```
+
+    ## [1] 34028
+
+Technical Questions about data frames
+-------------------------------------
+
+1.  attempting to use the name of a column that does not exist will return a NULL
+2.  mtcars\[ ,mpg\] fails to return the vector mpg
+3.  The command fails because there is no object named mpg in environment. mpg is the name of the column on the data frame, but mpg is not assigned to any particular object.
+4.  YES, you can include an R list as a 'column' of a data frame. A data frame is a list, it can contain other lists.
+5.  The command returns the list of vectors that make up the data frame.
+6.  data.frame can be used to conver abc into a data frame.
+
+Correlations
+------------
+
+``` r
+read = na.omit(normal_read)
+
+quantitative = Filter(is.numeric, read)
+qdat = quantitative[ ,3:ncol(quantitative)]
+correlation_matrix = cor(qdat)
+library(corrplot)
+```
+
+    ## corrplot 0.84 loaded
+
+``` r
+corrplot(correlation_matrix, method = 'circle')
+```
+
+![](hw01-Tianran-Li_files/figure-markdown_github/unnamed-chunk-13-1.png)
+
+``` r
+corrplot(correlation_matrix, method = 'ellipse')
+```
+
+![](hw01-Tianran-Li_files/figure-markdown_github/unnamed-chunk-13-2.png) The strongest positive correlation is between an object and itself. The strongest negative correlatio is between city\_mpg or highway\_mpg and horsepower. In some combinations, the correlation between the two vectors is close to zero.
+
+Principal Component Analysis
+
+8.1)
+
+``` r
+Qdat_PCA = prcomp(qdat, scale = TRUE)
+names(Qdat_PCA)
+```
+
+    ## [1] "sdev"     "rotation" "center"   "scale"    "x"
+
+``` r
+eigenvalues = Qdat_PCA$sdev^2
+percentages = eigenvalues*100/sum(eigenvalues)
+cum_percentages = cumsum(percentages)
+data.frame(eigenvalues, percentages, cum_percentages)
+```
+
+    ##    eigenvalues percentages cum_percentages
+    ## 1   7.78036168  55.5740120        55.57401
+    ## 2   2.04609771  14.6149837        70.18900
+    ## 3   1.31815775   9.4154125        79.60441
+    ## 4   0.88723082   6.3373630        85.94177
+    ## 5   0.56546244   4.0390174        89.98079
+    ## 6   0.39095199   2.7925142        92.77330
+    ## 7   0.27618337   1.9727384        94.74604
+    ## 8   0.22164907   1.5832077        96.32925
+    ## 9   0.14783726   1.0559805        97.38523
+    ## 10  0.12214670   0.8724764        98.25771
+    ## 11  0.08942773   0.6387695        98.89648
+    ## 12  0.08612020   0.6151443        99.51162
+    ## 13  0.04580215   0.3271582        99.83878
+    ## 14  0.02257113   0.1612224       100.00000
+
+About 79.60% of variation is "captured" by the first three components.
+
+8.2)
+
+``` r
+df_PCA = data.frame(Qdat_PCA$x)
+plot(df_PCA$PC1, df_PCA$PC2, type = 'p')
+```
+
+![](hw01-Tianran-Li_files/figure-markdown_github/unnamed-chunk-15-1.png)
+
+``` r
+plot(Qdat_PCA, type = 'l')
+```
+
+![](hw01-Tianran-Li_files/figure-markdown_github/unnamed-chunk-15-2.png)
+
+``` r
+Print_PCA = princomp(qdat, cor = TRUE)
+Loadingdf = data.frame(unclass(Print_PCA$loadings))
+plot(Loadingdf$Comp.1, Loadingdf$Comp.2, type = 'p')
+```
+
+![](hw01-Tianran-Li_files/figure-markdown_github/unnamed-chunk-16-1.png)
+
+``` r
+plot(Print_PCA, type = 'l')
+```
+
+![](hw01-Tianran-Li_files/figure-markdown_github/unnamed-chunk-16-2.png) For both prcomp and princomp, the first loading has the most variance, and can represent more of the data than any other object in loading. For Princomp, the loadings are perpendicular to each other.
