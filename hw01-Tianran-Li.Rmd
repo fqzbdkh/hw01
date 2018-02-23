@@ -27,7 +27,6 @@ normal_read <- read.csv(
 )
 
 str(normal_read)
-normal_read
 ```
 
 ```{r}
